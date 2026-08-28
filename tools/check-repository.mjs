@@ -15,7 +15,7 @@ const bilingualPairs = [
   ["conformance/README.md", "conformance/README.zh-CN.md"]
 ];
 const required = [
-  "VERSION", "grammar/pp.ebnf", "conformance/suite.json",
+  "VERSION", "LICENSE-APACHE", "LICENSE-MIT", "grammar/pp.ebnf", "conformance/suite.json",
   ...bilingualPairs.flat()
 ];
 for (const path of required) {

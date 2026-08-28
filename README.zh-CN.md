@@ -77,4 +77,5 @@ pplang 使用语义化版本标签。补丁版本可以澄清规范、修正测�
 
 ## 许可证
 
-项目所有者尚未选择许可证。在添加许可证之前，本仓库适用默认版权限制。
+本仓库由使用者选择采用 [Apache License 2.0](LICENSE-APACHE) 或
+[MIT License](LICENSE-MIT)。

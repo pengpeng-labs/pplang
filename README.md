@@ -85,5 +85,5 @@ syntax addition or observable semantic change requires a minor release.
 
 ## License
 
-No license has been selected by the project owner. Until a license is added,
-the repository remains subject to the default copyright restrictions.
+Licensed under either the [Apache License, Version 2.0](LICENSE-APACHE) or the
+[MIT License](LICENSE-MIT), at your option.
