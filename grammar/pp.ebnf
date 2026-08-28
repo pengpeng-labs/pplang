@@ -1,0 +1,88 @@
+(* pplang 0.3.1 grammar. Whitespace and comments may separate tokens. *)
+
+program        = { item } ;
+item           = function_decl | extern_decl | struct_decl | enum_decl
+               | import_decl | static_decl ;
+
+function_decl  = prototype block ;
+extern_decl    = "extern", prototype, ";" ;
+prototype      = "fn", identifier, [ type_parameters ], "(", [ parameters ], ")",
+                 [ "->", type ] ;
+type_parameters = "[", identifier, { ",", identifier }, "]" ;
+type_arguments = "[", type, { ",", type }, "]" ;
+parameters     = parameter, { ",", parameter }, [ ",", "..." ] | "..." ;
+parameter      = identifier, ":", type ;
+
+struct_decl    = "struct", identifier, [ type_parameters ], "{",
+                 [ field, { ",", field }, [ "," ] ], "}" ;
+field          = identifier, ":", type ;
+enum_decl      = "enum", identifier, [ type_parameters ], "{",
+                 variant, { ",", variant }, [ "," ], "}" ;
+variant        = identifier, [ "(", type, ")" ] ;
+import_decl    = "import", string_literal, ";" ;
+static_decl    = "static", identifier, ":", type, [ "=", expression ], ";" ;
+
+block          = "{", { statement }, "}" ;
+statement      = let_statement | assignment | if_statement | while_statement
+               | for_statement | switch_statement | defer_statement
+               | return_statement | "break", ";" | "continue", ";"
+               | expression, ";" ;
+let_statement  = "let", ( identifier, [ ":", type ], [ "=", expression ]
+               | "(", identifier, ",", identifier, { ",", identifier }, ")",
+                 "=", expression ), ";" ;
+assignment     = lvalue, "=", expression, ";" ;
+lvalue         = identifier | "*", unary | postfix, ".", identifier
+               | postfix, "[", expression, "]" ;
+if_statement   = "if", "(", expression, ")", block,
+                 [ "else", ( if_statement | block ) ] ;
+while_statement = "while", "(", expression, ")", block ;
+for_statement  = "for", identifier, "in", expression, block ;
+defer_statement = "defer", expression, ";" ;
+return_statement = "return", [ expression ], ";" ;
+switch_statement = "switch", expression, "{", switch_arm, { switch_arm }, "}" ;
+switch_arm     = ( identifier, ".", identifier, [ "(", identifier, ")" ] | "_" ),
+                 block ;
+
+type           = "void" | "int" | "float" | "bool" | "str"
+               | "u8" | "u16" | "u32" | "u64"
+               | "[", integer_literal, "]", type | "*", type
+               | "fn", "(", [ type, { ",", type } ], ")", [ "->", type ]
+               | "(", type, ",", type, { ",", type }, ")"
+               | identifier, [ type_arguments ] ;
+
+expression     = logical_or ;
+logical_or     = logical_and, { "||", logical_and } ;
+logical_and    = bitwise_or, { "&&", bitwise_or } ;
+bitwise_or     = bitwise_xor, { "|", bitwise_xor } ;
+bitwise_xor    = bitwise_and, { "^", bitwise_and } ;
+bitwise_and    = comparison, { "&", comparison } ;
+comparison     = shift, { ( "==" | "!=" | "<" | ">" | "<=" | ">=" | "in" ), shift } ;
+shift          = additive, { ( "<<" | ">>" ), additive } ;
+additive       = multiplicative, { ( "+" | "-" ), multiplicative } ;
+multiplicative = unary, { ( "*" | "/" | "%" ), unary } ;
+unary          = ( "-" | "!" | "~" | "&" | "*" ), unary | postfix ;
+postfix        = primary, { ".", identifier, [ type_arguments ], [ "(", [ arguments ], ")" ]
+                         | "[", slice_or_index, "]" | "as", type } ;
+slice_or_index = [ expression ], ":", [ expression ] | expression ;
+primary        = literal
+               | identifier, [ type_arguments ], ( "(", [ arguments ], ")" | struct_initializer )
+               | identifier
+               | "(", expression, [ ",", expression, { ",", expression } ], ")"
+               | "[", [ expression, { ",", expression } ], "]" ;
+struct_initializer = "{", [ identifier, ":", expression,
+                     { ",", identifier, ":", expression } ], "}" ;
+arguments      = expression, { ",", expression } ;
+
+identifier     = ( ascii_letter | "_" ), { ascii_letter | decimal_digit | "_" } ;
+literal        = integer_literal | float_literal | boolean_literal | string_literal ;
+integer_literal = decimal_integer | hexadecimal_integer ;
+decimal_integer = decimal_digit, { decimal_digit } ;
+hexadecimal_integer = "0", ( "x" | "X" ), hex_digit, { hex_digit } ;
+float_literal  = decimal_integer, ".", decimal_digit, { decimal_digit } ;
+boolean_literal = "true" | "false" ;
+string_literal = '"', { string_character | escape_sequence }, '"' ;
+escape_sequence = "\\", ( "n" | "t" | "r" | "\\" | '"' | "0" ) ;
+string_character = ? any Unicode scalar value except quote, backslash, CR, or LF ? ;
+ascii_letter   = "A" ... "Z" | "a" ... "z" ;
+decimal_digit  = "0" ... "9" ;
+hex_digit      = decimal_digit | "A" ... "F" | "a" ... "f" ;
