@@ -2,7 +2,7 @@
 
 [简体中文](design.zh-CN.md)
 
-This document explains the stable design choices behind pplang 0.3.1. It is
+This document explains the stable design choices behind pplang 0.4.0. It is
 informative rather than normative; [`spec.md`](spec.md) defines accepted
 program behavior.
 
@@ -150,41 +150,54 @@ Keeping these layers separate allows a hosted program, a freestanding kernel,
 and an embedded library to provide different policies without changing the
 source-language type system.
 
-## 9. Rejected alternatives
+## 9. Package imports without package management
 
-### 9.1 Ownership and borrow checking
+Relative file inclusion is sufficient inside one source tree but cannot name a
+dependency independently of checkout layout. Package imports therefore use an
+explicit `@name/path.pp` form and a build-provided name-to-root map. The source
+meaning never depends on whether a same-named relative file happens to exist.
+
+This is intentionally smaller than a module system. Imported declarations are
+still flattened, and package names do not become language namespaces. Version
+selection, Git access, checksums, lockfiles, and workspaces remain toolchain
+policy. The separation lets the compiler resolve a deterministic source graph
+without giving the language a network or package-manager execution model.
+
+## 10. Rejected alternatives
+
+### 10.1 Ownership and borrow checking
 
 Static lifetime proofs would provide stronger memory guarantees, but they would
-dominate the language and compiler. Version 0.3.1 chooses explicit ownership
+dominate the language and compiler. Version 0.4.0 chooses explicit ownership
 contracts and accepts that invalid raw-pointer use is not prevented statically.
 
-### 9.2 Traits, interfaces, and implicit generic inference
+### 10.2 Traits, interfaces, and implicit generic inference
 
 These mechanisms improve abstraction at scale but require method lookup,
 coherence rules, constraint solving, or runtime representation decisions.
 Function pointers and explicit type arguments cover the intended scale with a
 smaller semantic surface.
 
-### 9.3 Garbage collection
+### 10.3 Garbage collection
 
 A required collector conflicts with predictable freestanding execution and
 would introduce a runtime larger than the core language. Applications may
 provide arenas or collectors as libraries when appropriate.
 
-### 9.4 Source-level unsafe and inline assembly blocks
+### 10.4 Source-level unsafe and inline assembly blocks
 
 An `unsafe` marker without an enforced safe subset would be decorative. Inline
 assembly would couple the language grammar to target-specific constraints.
 pplang instead keeps raw capabilities visible through types, builtins, and
 external glue.
 
-### 9.5 General metaprogramming and macros
+### 10.5 General metaprogramming and macros
 
 Compile-time execution and macros can replace repetition but make source
 meaning dependent on another execution system. Explicit generics are the only
-compile-time code-generation mechanism in version 0.3.1.
+compile-time code-generation mechanism in version 0.4.0.
 
-## 10. Evaluation criteria
+## 11. Evaluation criteria
 
 A design change should be evaluated against four questions:
 

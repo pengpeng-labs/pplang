@@ -27,7 +27,7 @@ if (existsSync(resolve(root, "PROVENANCE.md"))) {
 
 const version = readFileSync(resolve(root, "VERSION"), "utf8").trim();
 const suite = JSON.parse(readFileSync(resolve(root, "conformance/suite.json"), "utf8"));
-if (suite.schema !== "pplang.conformance.v2") throw new Error("unknown conformance schema");
+if (suite.schema !== "pplang.conformance.v3") throw new Error("unknown conformance schema");
 if (suite.languageVersion !== version) throw new Error("VERSION and suite disagree");
 
 const ids = new Set();
@@ -43,6 +43,19 @@ for (const entry of suite.cases) {
   }
   if (entry.stderrContains !== undefined || entry.command !== undefined) {
     throw new Error(`${entry.id} leaks implementation-specific CLI or diagnostics`);
+  }
+  if (entry.importMap !== undefined) {
+    if (entry.importMap === null || Array.isArray(entry.importMap) || typeof entry.importMap !== "object") {
+      throw new Error(`${entry.id} has an invalid import map`);
+    }
+    for (const [name, path] of Object.entries(entry.importMap)) {
+      if (!/^[a-z][a-z0-9_-]*$/.test(name) || typeof path !== "string") {
+        throw new Error(`${entry.id} has an invalid import mapping`);
+      }
+      if (!existsSync(resolve(root, path))) {
+        throw new Error(`${entry.id} has a missing import root: ${path}`);
+      }
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-# pplang 0.3.1 Conformance Contract
+# pplang 0.4.0 Conformance Contract
 
 [简体中文](README.zh-CN.md)
 
@@ -16,7 +16,7 @@ command-line interface.
 | `trap` | The source must compile and terminate through the language trap mechanism. |
 
 Diagnostic language and wording are deliberately excluded. Compiler projects
-may maintain stable error codes, but those codes are not part of pplang 0.3.1.
+may maintain stable error codes, but those codes are not part of pplang 0.4.0.
 
 ## Adapter
 
@@ -35,5 +35,5 @@ repository.
 The suite covers strict boolean conditions, lexical scope, unsigned integer
 operations, array syntax, checked string slices, tuple returns, sum
 exhaustiveness, explicit generics, iteration, method auto-addressing, deferred
-call order, extern restrictions, and loop-control context. The suite is a
+call order, package-root import mapping, extern restrictions, and loop-control context. The suite is a
 minimum compatibility gate rather than an exhaustive test of every program.

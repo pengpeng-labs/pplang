@@ -1,9 +1,9 @@
-# pplang 0.3.1 Language Specification
+# pplang 0.4.0 Language Specification
 
 [简体中文](spec.zh-CN.md)
 
-Status: **0.3.1 stable**. This document is the normative definition of pplang
-0.3.1. The Chinese document is an official translation; this English text takes
+Status: **0.4.0 stable**. This document is the normative definition of pplang
+0.4.0. The Chinese document is an official translation; this English text takes
 precedence if the two differ.
 
 The terms **must**, **must not**, **should**, and **may** express requirements,
@@ -15,7 +15,7 @@ pplang is a statically typed systems language with lexical scope, value
 semantics, explicit resource management, and no required garbage collector or
 hidden runtime. A source file uses the `.pp` extension.
 
-An implementation conforms to version 0.3.1 when it accepts every valid 0.3.1
+An implementation conforms to version 0.4.0 when it accepts every valid 0.4.0
 program, rejects every program that violates a stated compile-time rule, and
 implements the observable runtime behavior in this specification. Diagnostic
 wording and compiler command-line interfaces are not standardized.
@@ -38,7 +38,7 @@ comment terminated by the next `*/`; block comments do not nest.
 
 Decimal integer literals contain one or more digits. Hexadecimal integer
 literals begin with `0x` or `0X`. A floating literal contains decimal digits,
-a period, and at least one digit after the period. Version 0.3.1 has no exponent,
+a period, and at least one digit after the period. Version 0.4.0 has no exponent,
 digit-separator, character, or numeric-suffix syntax.
 
 String literals are delimited by `"`. A literal may contain UTF-8 text and the
@@ -175,7 +175,7 @@ declaration order determines field order; padding and external ABI layout are
 target-defined.
 
 A tuple contains at least two elements. Tuples may be returned and destructured
-with `let (a, b, ...) = value;`. Version 0.3.1 provides neither tuple indexing nor
+with `let (a, b, ...) = value;`. Version 0.4.0 provides neither tuple indexing nor
 nested destructuring. Tuples are not valid in an `extern` signature.
 
 An enum variant has either no payload or one payload. Construction uses
@@ -190,7 +190,7 @@ list denotes a distinct monomorphized instance. A generic body receives no
 implicit arithmetic, comparison, conversion, or conditional capability for a
 type parameter. Required operations must be supplied as ordinary function
 pointer parameters. Generic extern declarations, inference, traits,
-specialization, and constraint solving are not part of version 0.3.1.
+specialization, and constraint solving are not part of version 0.4.0.
 
 `sizeof[T]()` and `alignof[T]()` produce compile-time `u64` values for a
 concrete type. They take exactly one type argument and no value arguments.
@@ -208,7 +208,7 @@ forms, and `s[:]` return views into the same storage. String indexing and
 slicing require `0 <= i < len` and `0 <= lo <= hi <= len`; violation traps.
 
 `len(array)` is its compile-time element count. Array and raw-pointer indexing
-do not add a runtime bounds check in version 0.3.1; the program must provide a
+do not add a runtime bounds check in version 0.4.0; the program must provide a
 valid index and live storage. Pointer addition and subtraction scale by the
 pointee size. Dereferencing null, invalid, expired, or misaligned pointers is
 invalid program behavior.
@@ -223,10 +223,25 @@ The host-specific termination mechanism is not standardized.
 ## 10. Imports, external functions, and system capabilities
 
 `import "relative/path.pp";` includes declarations from a UTF-8 source file
-resolved relative to the importing file. The same canonical file is included
-at most once, so an import cycle terminates when it reaches an included file. A
-missing file is a compile-time error. Version 0.3.1 has no package name or
-dependency-resolution semantics.
+resolved relative to the importing file. `import "@name/path.pp";` includes a
+file below the source root mapped to package name `name` by the build
+environment. Package names use `[a-z][a-z0-9_-]*`. A package import must contain
+a path after the name; path components are separated by `/`, the path must be
+relative, must not contain empty, `.` or `..` components or a backslash, and
+must resolve inside the mapped package root. An absent mapping,
+missing file, or path escaping its package root is a compile-time error.
+
+The `@` prefix makes package and relative resolution disjoint. Implementations
+must not fall back from one form to the other based on which files happen to
+exist. Both forms include declarations directly into the importing program;
+packages do not create namespaces or alter name-collision rules. The same
+canonical file is included at most once, so an import cycle terminates when it
+reaches an included file.
+
+This specification defines package-import spelling and resolution through a
+provided name-to-root map. Dependency versions, source acquisition, checksums,
+lockfiles, workspace membership, and registry behavior belong to the build
+toolchain rather than the language.
 
 `extern fn` declares a host-provided function. Primitive integers, `float`,
 `bool`, and pointers use the target C ABI representation. A `str` parameter is
@@ -237,12 +252,12 @@ FFI layout is target-defined and should be mediated by explicit glue code.
 
 Raw pointers, volatile access, port I/O, interrupt control, clocks, and atomics
 are system capabilities supplied by a compiler target or host module. Version
-0.3.1 intentionally has no source-level `unsafe` or `asm` syntax. The presence of
+0.4.0 intentionally has no source-level `unsafe` or `asm` syntax. The presence of
 a builtin on one target does not make it portable to another target.
 
 ## 11. Defined boundaries
 
-The following are outside pplang 0.3.1: garbage collection, ownership and borrow
+The following are outside pplang 0.4.0: garbage collection, ownership and borrow
 checking, optional-pointer syntax, traits and interfaces, generic inference,
 type sets, specialization, compile-time metaprogramming, closures, exceptions,
 macros, source-level inline assembly, and the legacy array spelling `[T; N]`.

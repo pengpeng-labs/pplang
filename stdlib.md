@@ -1,4 +1,4 @@
-# pplang 0.3.1 Standard Library
+# pplang 0.4.0 Standard Library
 
 [简体中文](stdlib.zh-CN.md)
 
@@ -98,8 +98,8 @@ Module: `stdlib/vec.pp`
 
 | Function | Contract |
 |---|---|
-| `vec_new[T]() -> Vec[T]` | Create an empty vector with capacity four. Version 0.3.1 requires allocator success. |
-| `vec_push[T](vec: *Vec[T], value: T)` | Append a copied value, growing geometrically. Version 0.3.1 requires allocator success. |
+| `vec_new[T]() -> Vec[T]` | Create an empty vector with capacity four. Version 0.4.0 requires allocator success. |
+| `vec_push[T](vec: *Vec[T], value: T)` | Append a copied value, growing geometrically. Version 0.4.0 requires allocator success. |
 | `vec_get[T](vec: *Vec[T], index: int) -> T` | Return a copy. The caller must provide `0 <= index < len`. |
 | `vec_free[T](vec: *Vec[T])` | Release storage and reset all fields. Element destructors are not run. |
 

@@ -4,6 +4,14 @@
 
 本文件只记录已经发布的语言定义变更。开发过程由 Git 历史和 issue 追踪。
 
+## 0.4.0 - 2026-08-28
+
+- 定义通过构建环境 package-root map 解析的显式
+  `import "@package/path.pp";`。
+- 保持相对 import 与 package import 互不重叠，并继续采用声明展平语义，不引入
+  namespace。
+- 依赖获取、版本、checksum、lockfile、workspace 和 registry 仍属于工具链。
+
 ## 0.3.1 - 2026-08-28
 
 pplang 独立语言定义仓库的首个公开版本。

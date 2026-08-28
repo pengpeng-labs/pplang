@@ -1,6 +1,6 @@
 {
-  "schema": "pplang.conformance.v2",
-  "languageVersion": "0.3.1",
+  "schema": "pplang.conformance.v3",
+  "languageVersion": "0.4.0",
   "cases": [
     { "id": "run-answer", "path": "conformance/positive/answer.pp", "expect": "run", "stdout": "42\n" },
     { "id": "scope-shadow", "path": "conformance/positive/scope_shadow.pp", "expect": "run", "stdout": "9\n7\n" },
@@ -13,6 +13,7 @@
     { "id": "iteration", "path": "conformance/positive/iteration.pp", "expect": "run", "stdout": "18\n" },
     { "id": "method-autoref", "path": "conformance/positive/method_autoref.pp", "expect": "run", "stdout": "42\n" },
     { "id": "defer-lifo", "path": "conformance/positive/defer_lifo.pp", "expect": "run", "stdout": "0\n2\n1\n0\n" },
+    { "id": "package-import", "path": "conformance/package/main.pp", "expect": "run", "stdout": "42\n", "importMap": { "math": "conformance/package/math" } },
     { "id": "slice-bounds-trap", "path": "conformance/runtime/slice_bounds.pp", "expect": "trap" },
     { "id": "strict-bool", "path": "conformance/negative/int_condition.pp", "expect": "reject" },
     { "id": "scope-does-not-escape", "path": "conformance/negative/scope_escape.pp", "expect": "reject" },

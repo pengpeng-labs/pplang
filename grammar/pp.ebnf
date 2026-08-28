@@ -1,4 +1,4 @@
-(* pplang 0.3.1 grammar. Whitespace and comments may separate tokens. *)
+(* pplang 0.4.0 grammar. Whitespace and comments may separate tokens. *)
 
 program        = { item } ;
 item           = function_decl | extern_decl | struct_decl | enum_decl

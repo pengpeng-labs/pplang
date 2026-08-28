@@ -5,6 +5,15 @@
 This file records released language-definition changes. Development activity
 belongs in Git history and issue tracking.
 
+## 0.4.0 - 2026-08-28
+
+- Define explicit `import "@package/path.pp";` resolution through a
+  build-provided package-root map.
+- Keep relative imports disjoint and preserve declaration-flattening semantics
+  without introducing namespaces.
+- Leave dependency acquisition, versions, checksums, lockfiles, workspaces,
+  and registries to the toolchain.
+
 ## 0.3.1 - 2026-08-28
 
 First public release of the standalone pplang language definition.

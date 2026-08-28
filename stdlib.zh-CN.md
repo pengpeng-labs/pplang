@@ -1,4 +1,4 @@
-# pplang 0.3.1 标准库
+# pplang 0.4.0 标准库
 
 [English](stdlib.md)
 
@@ -93,8 +93,8 @@
 
 | 函数 | 合同 |
 |---|---|
-| `vec_new[T]() -> Vec[T]` | 创建容量为四的空 vector；0.3.1 要求 allocator 成功。 |
-| `vec_push[T](vec: *Vec[T], value: T)` | 复制追加一个值并按几何级数扩容；0.3.1 要求 allocator 成功。 |
+| `vec_new[T]() -> Vec[T]` | 创建容量为四的空 vector；0.4.0 要求 allocator 成功。 |
+| `vec_push[T](vec: *Vec[T], value: T)` | 复制追加一个值并按几何级数扩容；0.4.0 要求 allocator 成功。 |
 | `vec_get[T](vec: *Vec[T], index: int) -> T` | 返回副本；调用方必须保证 `0 <= index < len`。 |
 | `vec_free[T](vec: *Vec[T])` | 释放存储并重置全部字段；不会运行元素析构。 |
 

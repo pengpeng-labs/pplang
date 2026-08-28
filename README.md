@@ -7,7 +7,7 @@ systems programming language. The language is designed for explicit resource
 management, freestanding programs, compact compiler implementations, and
 predictable source generation.
 
-The current language version is **0.3.1**. [`spec.md`](spec.md) is the normative
+The current language version is **0.4.0**. [`spec.md`](spec.md) is the normative
 English specification. [`spec.zh-CN.md`](spec.zh-CN.md) is its official Simplified
 Chinese translation. If the two texts differ, the English specification takes
 precedence.
@@ -52,10 +52,12 @@ fn main() -> int {
 }
 ```
 
-Version 0.3.1 provides value-semantics structs and enums, exhaustive `switch`,
+Version 0.4.0 provides value-semantics structs and enums, exhaustive `switch`,
 explicit monomorphized generics, tuples, fixed-size arrays, length-carrying
 byte strings, lexical scopes, function pointers, explicit allocation, and a
-visible raw-pointer boundary. It does not provide garbage collection, an
+visible raw-pointer boundary. Explicit `@package/path.pp` imports connect this
+source contract to a build-provided package map without embedding dependency
+resolution in the language. It does not provide garbage collection, an
 ownership checker, traits, implicit generic inference, exceptions, macros,
 source-level `unsafe`, or inline assembly.
 

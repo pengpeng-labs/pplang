@@ -12,8 +12,11 @@ if (!compiler) {
 
 const suite = JSON.parse(readFileSync(resolve(root, "conformance/suite.json"), "utf8"));
 
-function invoke(command, source) {
-  const result = spawnSync(compiler, [command, source], {
+function invoke(command, source, importMap = {}) {
+  const mappings = Object.entries(importMap)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .flatMap(([name, path]) => ["--import-map", `${name}=${resolve(root, path)}`]);
+  const result = spawnSync(compiler, [command, source, ...mappings], {
     cwd: root,
     encoding: "utf8"
   });
@@ -29,23 +32,23 @@ let passed = 0;
 for (const entry of suite.cases) {
   const source = resolve(root, entry.path);
   if (entry.expect === "accept") {
-    const result = invoke("ir", source);
+    const result = invoke("ir", source, entry.importMap);
     if (result.status !== 0) throw new Error(`${entry.id}: expected acceptance\n${describe(result)}`);
   } else if (entry.expect === "reject") {
-    const result = invoke("ir", source);
+    const result = invoke("ir", source, entry.importMap);
     if (result.status === 0 || result.status === null) {
       throw new Error(`${entry.id}: expected a clean compile-time rejection\n${describe(result)}`);
     }
   } else if (entry.expect === "run") {
-    const result = invoke("run", source);
+    const result = invoke("run", source, entry.importMap);
     if (result.status !== 0) throw new Error(`${entry.id}: expected normal execution\n${describe(result)}`);
     if (result.stdout !== entry.stdout) {
       throw new Error(`${entry.id}: stdout mismatch\nexpected ${JSON.stringify(entry.stdout)}\nactual   ${JSON.stringify(result.stdout)}`);
     }
   } else if (entry.expect === "trap") {
-    const compile = invoke("ir", source);
+    const compile = invoke("ir", source, entry.importMap);
     if (compile.status !== 0) throw new Error(`${entry.id}: trap case did not compile\n${describe(compile)}`);
-    const result = invoke("run", source);
+    const result = invoke("run", source, entry.importMap);
     if (result.status === 0) throw new Error(`${entry.id}: expected a runtime trap\n${describe(result)}`);
   } else {
     throw new Error(`${entry.id}: unknown outcome ${entry.expect}`);
